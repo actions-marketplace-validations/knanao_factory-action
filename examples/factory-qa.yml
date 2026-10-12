@@ -1,0 +1,27 @@
+# Opt-in QA with the qa skill. Requires .factory/skills/qa* in the repository
+# (run /install-qa once) and an app reachable from the Droid Computer.
+name: Factory QA
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+permissions: {}
+
+jobs:
+  qa:
+    if:
+      ${{ !github.event.pull_request.draft &&
+      github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    concurrency:
+      group: factory-qa-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    steps:
+      - uses: knanao/factory-action@v1
+        with:
+          factory-api-key: ${{ secrets.FACTORY_API_KEY }}
+          computer-id: ${{ vars.FACTORY_COMPUTER_ID }}
+          mode: qa

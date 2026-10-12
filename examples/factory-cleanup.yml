@@ -1,0 +1,21 @@
+# Removes Droid's worktrees and local branches when an issue or PR closes.
+# pull_request_target is safe here: the action reads no PR content and checks
+# out nothing, and it also covers PRs from forks.
+name: Factory Cleanup
+
+on:
+  issues: { types: [closed] }
+  pull_request_target: { types: [closed] }
+
+permissions: {}
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions: { issues: write, pull-requests: write }
+    steps:
+      - uses: knanao/factory-action@v1
+        with:
+          factory-api-key: ${{ secrets.FACTORY_API_KEY }}
+          computer-id: ${{ vars.FACTORY_COMPUTER_ID }}
+          mode: cleanup

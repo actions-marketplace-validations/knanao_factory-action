@@ -1,0 +1,119 @@
+name: Factory Droid
+description:
+  Delegate tasks, code reviews and security reviews from GitHub to Factory Droid
+  via the Sessions API (fire-and-forget).
+author: knanao
+
+branding:
+  icon: cpu
+  color: purple
+
+inputs:
+  factory-api-key:
+    description: Factory API key. A service account key is recommended.
+    required: true
+  computer-id:
+    description: ID of the Droid Computer the session runs on.
+    required: true
+  mode:
+    description:
+      mention | review | security | deep-security | qa | custom | cleanup
+    required: false
+    default: mention
+  prompt:
+    description:
+      Template sent in custom mode (required there). In other modes it is
+      appended as additional instructions.
+    required: false
+    default: ''
+  lane:
+    description:
+      Key for reusing sessions per issue/PR. Defaults to the mode (task for
+      mention).
+    required: false
+    default: ''
+  trigger-phrase:
+    description: Phrase that triggers mention mode.
+    required: false
+    default: '@factory'
+  allowed-associations:
+    description: author_association values allowed to trigger (comma separated).
+    required: false
+    default: OWNER,MEMBER,COLLABORATOR
+  permission-fallback:
+    description:
+      When the association is not allowed, allow users with write or admin
+      permission (covers private org members).
+    required: false
+    default: 'true'
+  allowed-bots:
+    description: Bot logins allowed to trigger (comma separated).
+    required: false
+    default: ''
+  commands:
+    description: >-
+      Skills and plugin commands that run as a slash command when named right
+      after the trigger phrase (comma separated): `@factory verify ...` runs
+      `/verify`.
+    required: false
+    default: security-review,deep-security-review,qa,verify,qa-test,demo
+  cwd:
+    description:
+      Repository path on the computer. Resolved from the computer's cloned
+      repositories when empty.
+    required: false
+    default: ''
+  model:
+    description: Model for new sessions. Factory's default when empty.
+    required: false
+    default: ''
+  reasoning-effort:
+    description:
+      Reasoning effort for new sessions. Factory's default when empty.
+    required: false
+    default: ''
+  autonomy-level:
+    description: off | low | medium | high
+    required: false
+    default: high
+  reuse-session:
+    description: Send follow-ups to the existing session of the lane.
+    required: false
+    default: 'true'
+  max-comments:
+    description: Maximum inline comments per review (review and security modes).
+    required: false
+    default: '30'
+  message-timeout-ms:
+    description:
+      Timeout for sending the message. A timeout is treated as accepted.
+    required: false
+    default: '15000'
+  github-token:
+    description:
+      Token for the action's own reaction and tracking comment. It is never
+      passed to Droid.
+    required: false
+    default: ${{ github.token }}
+  factory-api-url:
+    description: Factory API base URL.
+    required: false
+    default: https://api.factory.ai
+
+outputs:
+  session-id:
+    description: >-
+      The session the message was sent to (in cleanup mode, the sessions asked
+      to clean up, comma separated).
+  session-url:
+    description: Link to the session in the Factory web app.
+  reused:
+    description: true when the message was a follow-up to an existing session.
+  skipped:
+    description:
+      Empty, or why the event was skipped (unauthorized, no-trigger, fork, bot,
+      draft).
+
+runs:
+  using: node24
+  main: dist/index.js

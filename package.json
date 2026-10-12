@@ -1,0 +1,60 @@
+{
+  "name": "factory-action",
+  "description": "Delegate tasks, code reviews and security reviews from GitHub to Factory Droid via the Sessions API",
+  "version": "0.1.0",
+  "author": "knanao",
+  "type": "module",
+  "private": true,
+  "homepage": "https://github.com/knanao/factory-action",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knanao/factory-action.git"
+  },
+  "bugs": {
+    "url": "https://github.com/knanao/factory-action/issues"
+  },
+  "keywords": [
+    "actions",
+    "factory",
+    "droid"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "bundle": "bun run format:write && bun run package",
+    "ci-test": "bun test --coverage",
+    "format:write": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "local-action": "local-action . src/main.ts .env",
+    "package": "rm -rf dist && bun build src/index.ts --target=node --format=esm --sourcemap=linked --outdir=dist",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "all": "bun run format:write && bun run lint && bun run typecheck && bun run test && bun run package"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.0.2",
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^10.0.1",
+    "@github/local-action": "^7.0.1",
+    "@types/bun": "^1.4.2",
+    "@types/node": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
+    "eslint": "^10.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^16.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
+  }
+}

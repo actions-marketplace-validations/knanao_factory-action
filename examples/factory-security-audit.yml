@@ -1,0 +1,20 @@
+# Weekly deep security audit of the whole repository.
+# Findings are filed as draft security advisories, never as public posts.
+name: Factory Security Audit
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: knanao/factory-action@v1
+        with:
+          factory-api-key: ${{ secrets.FACTORY_API_KEY }}
+          computer-id: ${{ vars.FACTORY_COMPUTER_ID }}
+          mode: deep-security

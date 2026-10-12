@@ -1,0 +1,30 @@
+# Automatic code review and security review on every PR push.
+name: Factory CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions: {}
+
+jobs:
+  droid:
+    if:
+      ${{ !github.event.pull_request.draft &&
+      github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    strategy:
+      matrix:
+        mode: [review, security]
+    concurrency:
+      group: factory-${{ matrix.mode }}-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    steps:
+      # No checkout needed: the action only calls the Factory API and finishes in seconds.
+      - uses: knanao/factory-action@v1
+        with:
+          factory-api-key: ${{ secrets.FACTORY_API_KEY }}
+          computer-id: ${{ vars.FACTORY_COMPUTER_ID }}
+          mode: ${{ matrix.mode }}
