@@ -314,6 +314,8 @@ To run the action against a local (simulated) event, copy [`.env.example`](./.en
 
 To run the action end to end offline, against a local mock of the Factory Sessions API and the GitHub REST API, use `bun run qa:mock` and `bun run qa:run <event-file>`. See [`.factory/skills/qa/SKILL.md`](./.factory/skills/qa/SKILL.md) for the scenarios and what to check.
 
+Unit tests live in `__tests__/` and mock the GitHub and Factory boundaries. `__tests__/integration/` goes further: it builds the bundle, runs it as a subprocess against localhost stubs of both APIs and checks the full path a runner takes (inputs, event parsing, authorization, session reuse, prompts, tracking state and outputs). Run it alone with `bun run test:integration`.
+
 `dist/` is committed. The **Check Transpiled JavaScript** workflow fails if it is stale. Releases follow the [typescript-action](https://github.com/actions/typescript-action) flow: `script/release` tags `vX.Y.Z` and updates the corresponding major tag (for `v0.1.0`, that is `v0`).
 
 ## Contributing

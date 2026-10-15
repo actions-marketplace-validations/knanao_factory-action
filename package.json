@@ -35,6 +35,7 @@
     "qa:run": "bun script/qa/run.ts",
     "package": "rm -rf dist && bun build src/index.ts --target=node --format=esm --sourcemap=linked --outdir=dist",
     "test": "bun test",
+    "test:integration": "bun test __tests__/integration",
     "typecheck": "tsc --noEmit",
     "all": "bun run format:write && bun run lint && bun run typecheck && bun run test && bun run package"
   },
